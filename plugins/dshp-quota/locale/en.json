@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Balance & Quota",
+    "description": "Live balance, quota windows and subscription usage for DeepSeek, MiniMax, Zhipu GLM and Kimi, above the sidebar user row. Reuses the providers already configured in DSH."
+  }
+}

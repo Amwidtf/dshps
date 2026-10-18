@@ -1,0 +1,65 @@
+{
+  "name": "dshps",
+  "version": "0.2.0",
+  "private": true,
+  "description": "DSH plugin stack (dshp-*): sidebar balance/quota panel for DeepSeek, Kimi, MiniMax and Zhipu GLM, plus a stack settings page",
+  "license": "MIT",
+  "author": "dshps contributors",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Amwidtf/dshps.git"
+  },
+  "homepage": "https://github.com/Amwidtf/dshps#readme",
+  "bugs": {
+    "url": "https://github.com/Amwidtf/dshps/issues"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "cordis",
+    "plugin",
+    "bundle",
+    "quota",
+    "balance"
+  ],
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./plugins/dshp-quota": "./plugins/dshp-quota/host.js",
+    "./plugins/dshp-quota/locale/*.json": "./plugins/dshp-quota/locale/*.json",
+    "./plugins/dshp-quota/icon": "./plugins/dshp-quota/icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "plugins/**/*"
+  ],
+  "scripts": {
+    "test": "node tools/test-host.mjs && node tools/test-client.mjs",
+    "check": "node --check index.js && node --check client.js && node --check plugins/dshp-quota/host.js",
+    "hygiene": "node tools/check-repo.mjs",
+    "docs:check": "node tools/check-docs.mjs",
+    "setup:test-deps": "node tools/setup-test-deps.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-connection",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-ui-settings"
+      ]
+    }
+  }
+}

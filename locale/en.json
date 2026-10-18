@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "DSH Plugin Stack",
+    "description": "dshps plugin stack runtime: mounts the shared Web entry for dshp-* plugins."
+  }
+}

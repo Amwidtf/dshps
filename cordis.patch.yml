@@ -1,0 +1,10 @@
+# dshps bundle patch layer.
+#
+# One bundle can insert several plugin rows; each `dshp-*` plugin is a subpath
+# export of this package. The package-root row enables the shared Web client
+# bundle (`./client`), which renders every dshp-* panel.
+- insert:
+    - id: dshp-collection
+      name: dshps
+    - id: dshp-quota
+      name: dshps/plugins/dshp-quota

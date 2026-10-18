@@ -1,0 +1,31 @@
+name: Feature request
+description: Suggest a new provider, window or UI improvement
+title: "[feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / motivation
+      description: What is missing or hard to read today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Provider/endpoint, displayed fields, placement, etc. Do not include private account data.
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - provider query / parsing
+        - sidebar compact panel
+        - overview / detail popover
+        - settings page
+        - docs / tooling
+    validations:
+      required: true

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "DSH 插件栈",
+    "description": "dshps 插件栈运行时：为 dshp-* 系列插件提供 Web 入口。"
+  }
+}

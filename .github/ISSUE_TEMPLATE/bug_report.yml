@@ -1,0 +1,47 @@
+name: Bug report
+description: Report a broken panel, query failure or rendering problem
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. **Do not paste API keys, cookies, session tokens or personal data.**
+        Redact account IDs / organisation IDs if they are sensitive.
+  - type: input
+    id: version
+    attributes:
+      label: dshps version / commit
+      placeholder: e.g. 0.2.0 or commit sha
+    validations:
+      required: true
+  - type: input
+    id: dsh
+    attributes:
+      label: DSH version and platform
+      placeholder: e.g. DSH 1.x, Windows 11
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Include the panel/tab (overview, Kimi, GLM, …) and the error text shown in the UI.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open Settings → DSH Plugin Stack
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs (redacted)
+      description: Harness console / `snapshot` error classification, with secrets removed.
+    validations:
+      required: false

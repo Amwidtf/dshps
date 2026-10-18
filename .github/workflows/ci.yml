@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Syntax + metadata checks
+        run: |
+          node --check index.js
+          node --check client.js
+          node --check plugins/dshp-quota/host.js
+          node -e "JSON.parse(require('fs').readFileSync('package.json','utf8'))"
+      - name: Repository hygiene (paths / secrets)
+        run: node tools/check-repo.mjs
+      - name: README links and anchors
+        run: node tools/check-docs.mjs
+
+  # Host/Client tests need @deepseek-ai/schemastery from a local DSH install
+  # (see README "开发与测试"); they are intentionally not run on public CI.
