@@ -7,6 +7,7 @@
  * JSON only — never the cookie or the secret.
  *
  * Usage: node tools/probe-rpc.mjs [endpoint] [payloadJson]
+ *        DSH_RPC_CHANNEL=/dshp-net node tools/probe-rpc.mjs snapshot
  */
 import { createHash, createHmac } from 'node:crypto'
 import { homedir } from 'node:os'
@@ -22,6 +23,7 @@ function credentialsPath() {
 
 const endpoint = process.argv[2] || 'snapshot'
 const payload = process.argv[3] ? JSON.parse(process.argv[3]) : {}
+const channel = (process.env.DSH_RPC_CHANNEL || '/dshp-quota').replace(/\/+$/u, '')
 const origin = (process.env.DSH_WEB_ORIGIN || 'http://127.0.0.1:62512').replace(/\/+$/u, '')
 let authority
 try {
@@ -71,7 +73,7 @@ const envelope = {
   payload,
 }
 
-const response = await fetch(`${origin}/dshp-quota/${endpoint}`, {
+const response = await fetch(`${origin}${channel}/${endpoint}`, {
   method: 'POST',
   headers: {
     'content-type': 'application/json',

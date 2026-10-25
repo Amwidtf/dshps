@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Workflow",
+    "description": "Saved dynamic workflows, run history and the extended workflow_plus tool: fan out subagents, observe files and git, run allowlisted commands through deterministic gates, and resume or amend runs."
+  }
+}

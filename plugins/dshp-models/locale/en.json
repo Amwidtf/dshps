@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Model sign-in",
+    "description": "Official Sign in with ChatGPT OAuth for the openai route (PKCE plus a loopback callback), and a UI for the authorization flows DSH already registers; tokens stay in the Host process credential store and never reach the page."
+  }
+}

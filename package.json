@@ -2,7 +2,7 @@
   "name": "dshps",
   "version": "0.2.0",
   "private": true,
-  "description": "DSH plugin stack (dshp-*): sidebar balance/quota panel for DeepSeek, Kimi, MiniMax and Zhipu GLM, plus a stack settings page",
+  "description": "DSH plugin stack (dshp-*): balance/quota sidebar panel, network proxy routing with audit monitor, model sign-in, extended workflows, and a shared floating UI. One bundle, shared Web client.",
   "license": "MIT",
   "author": "dshps contributors",
   "repository": {
@@ -30,7 +30,16 @@
     "./icon": "./icon.svg",
     "./plugins/dshp-quota": "./plugins/dshp-quota/host.js",
     "./plugins/dshp-quota/locale/*.json": "./plugins/dshp-quota/locale/*.json",
-    "./plugins/dshp-quota/icon": "./plugins/dshp-quota/icon.svg"
+    "./plugins/dshp-quota/icon": "./plugins/dshp-quota/icon.svg",
+    "./plugins/dshp-net": "./plugins/dshp-net/host.js",
+    "./plugins/dshp-net/locale/*.json": "./plugins/dshp-net/locale/*.json",
+    "./plugins/dshp-net/icon": "./plugins/dshp-net/icon.svg",
+    "./plugins/dshp-models": "./plugins/dshp-models/host.js",
+    "./plugins/dshp-models/locale/*.json": "./plugins/dshp-models/locale/*.json",
+    "./plugins/dshp-models/icon": "./plugins/dshp-models/icon.svg",
+    "./plugins/dshp-workflow": "./plugins/dshp-workflow/host.js",
+    "./plugins/dshp-workflow/locale/*.json": "./plugins/dshp-workflow/locale/*.json",
+    "./plugins/dshp-workflow/icon": "./plugins/dshp-workflow/icon.svg"
   },
   "files": [
     "index.js",
@@ -41,8 +50,8 @@
     "plugins/**/*"
   ],
   "scripts": {
-    "test": "node tools/test-host.mjs && node tools/test-client.mjs",
-    "check": "node --check index.js && node --check client.js && node --check plugins/dshp-quota/host.js",
+    "test": "node tools/test-host.mjs && node tools/test-workflow.mjs && node tools/test-client.mjs",
+    "check": "node --check index.js && node --check client.js && node --check plugins/dshp-quota/host.js && node --check plugins/dshp-net/host.js && node --check plugins/dshp-models/host.js && node --check plugins/dshp-workflow/host.js && node --check plugins/dshp-workflow/lib/meta.js && node --check plugins/dshp-workflow/lib/store.js && node --check plugins/dshp-workflow/lib/runtime.js && node --check tools/test-workflow.mjs",
     "hygiene": "node tools/check-repo.mjs",
     "docs:check": "node tools/check-docs.mjs",
     "setup:test-deps": "node tools/setup-test-deps.mjs"

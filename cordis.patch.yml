@@ -8,3 +8,9 @@
       name: dshps
     - id: dshp-quota
       name: dshps/plugins/dshp-quota
+    - id: dshp-net
+      name: dshps/plugins/dshp-net
+    - id: dshp-models
+      name: dshps/plugins/dshp-models
+    - id: dshp-workflow
+      name: dshps/plugins/dshp-workflow

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Network Router",
+    "description": "Loopback routing proxy for DSH: per-provider and per-domain egress through HTTP(S) upstream proxies, CONNECT/HTTP forwarding with untouched streaming, one-click .env proxy bootstrap with backup and revert, health checks, and an audit log with traffic statistics."
+  }
+}

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Network router">
+  <defs>
+    <linearGradient id="dshpNetBg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0d1b2f"/>
+      <stop offset="1" stop-color="#132b4a"/>
+    </linearGradient>
+    <linearGradient id="dshpNetCore" x1="28" y1="22" x2="40" y2="42" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#63e6ff"/>
+      <stop offset="1" stop-color="#4d6bfe"/>
+    </linearGradient>
+  </defs>
+  <rect x="3" y="3" width="58" height="58" rx="14" fill="url(#dshpNetBg)"/>
+  <circle cx="14" cy="18" r="3.4" fill="#2d6cdf"/>
+  <circle cx="14" cy="32" r="3.4" fill="#2d6cdf"/>
+  <circle cx="14" cy="46" r="3.4" fill="#2d6cdf"/>
+  <path d="M17 20.5 29 28M17 32h12M17 43.5 29 36" stroke="#3f7ff0" stroke-width="2" stroke-linecap="round" fill="none" opacity=".8"/>
+  <rect x="28" y="22" width="11" height="20" rx="3" fill="url(#dshpNetCore)"/>
+  <path d="M39 32h11" stroke="#63e6ff" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M46.5 28.5 51 32l-4.5 3.5" stroke="#63e6ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M42 14.5l5.5-2 5.5 2v4.2c0 3.6-2.3 6.6-5.5 7.8-3.2-1.2-5.5-4.2-5.5-7.8z" fill="#12203a" stroke="#63e6ff" stroke-width="1.6" stroke-linejoin="round"/>
+  <path d="M44.5 18.6l2 2 3.4-3.6" stroke="#63e6ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

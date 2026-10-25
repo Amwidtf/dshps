@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "模型登录",
+    "description": "为 openai 路由接入官方 Sign in with ChatGPT OAuth 登录（PKCE + 本机回调端口），并把 DSH 已有的授权登录流程接到设置页；令牌只保存在宿主进程的 DSH 凭据库中，不会返回给页面。"
+  }
+}
