@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "DSH Plugin Stack",
-    "description": "dshps plugin stack runtime: mounts the shared Web entry for dshp-* plugins (quota panel, network proxy gateway, model sign-in, workflow enhancements)."
+    "description": "dshps plugin stack runtime: mounts the shared Web entry and floating UI for dshp-* plugins (quota panel, network proxy gateway, model sign-in, workflow enhancements)."
   }
 }
