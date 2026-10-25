@@ -107,11 +107,14 @@ DSH 进程在启动时把 `$DSH_HOME/.env` 中的代理变量注入进程环境�
   的。快照里 `env.pendingRestart: true` 表示「文件已写入，但当前进程还没使用它」。
 - revert（`env-revert`）：有备份时恢复上述四个键的旧值（原本不存在的键删除对应行）并
   删除备份文件；没有备份时只删除与当前路由 URL 完全相同的托管行。
-- 已知干扰项（快照 `env.warnings` 会提示）：
+- 已知干扰项（快照 `env.warnings` 为英文兜底，`env.warningCodes` 是稳定的
+  `{ code, params }` 列表，由客户端按当前语言本地化）：
   - `ALL_PROXY` 可能优先于 `HTTP_PROXY`/`HTTPS_PROXY`，导致进程流量绕过路由器；
   - `NO_PROXY` 若命中某个已映射的供应商 host，该供应商流量会绕过路由器；
   - 只写了小写 `http_proxy` 的旧 `.env` 不会被托管，建议改成大写或留空；
-  - 修改 `port` 后，保存会自动重写已接管的 `.env` 并提示完整重启 DSH；重启前网关仍监听旧端口，重启后使用新端口。
+  - 端口避让（`port-fallback`）或 `.env` 端口与实际端口不一致（`port-mismatch`）；
+  - 写入后尚未完整重启 DSH（`restart-required`）。
+- 修改 `port` 后，保存会自动重写已接管的 `.env` 并提示完整重启 DSH；重启前网关仍监听旧端口，重启后使用新端口。
 
 > 禁用或卸载本插件前，请先执行 `env-revert`。否则 `.env` 仍然指向一个已停止的路由器，
 > DSH 的模型请求会全部失败（参见 [AGENTS.md](../../AGENTS.md) 的网络变更规则）。
@@ -143,10 +146,10 @@ DSH 进程在启动时把 `$DSH_HOME/.env` 中的代理变量注入进程环境�
 | 端点 | 入参 | 返回 |
 | --- | --- | --- |
 | `snapshot` | `{}` | `{ snapshot }` |
-| `config-write` | `{ config, revision? }` | `{ snapshot, warnings }` |
+| `config-write` | `{ config, revision? }` | `{ snapshot, warnings, portChanged, envRewritten?, envRewriteError? }` |
 | `proxy-test` | `{ id }` | `{ health }` |
 | `egress-test` | `{}` | `{ effective, evidence, error? }` |
-| `env-apply` | `{}` | `{ env }` |
+| `env-apply` | `{}` | `{ env, adoptedPort?, adoptedFrom? }` |
 | `env-revert` | `{}` | `{ env }` |
 | `logs-clear` | `{}` | `{ cleared }` |
 | `diag` | `{}` | `{ diag }` |
@@ -157,6 +160,11 @@ DSH 进程在启动时把 `$DSH_HOME/.env` 中的代理变量注入进程环境�
   表示写入/覆盖，空字符串表示删除该代理的密码记录；被移除的代理会顺带清理密码记录。
 - `config.providers` 为 **全量替换**，`proxy` 必须是 `'direct'` 或本次 `proxies` 中的 id。
 - `defaultProxy` / `proxies` / `providers` 任一字段省略时保持当前值（提供时才按全量替换）。
+- `config.port` 可选（1024–65535）：省略表示不改端口；提供且变化时返回 `portChanged: true`。
+  `.env` 当前托管在旧端口 URL 时，会原子重写 `HTTP_PROXY`/`HTTPS_PROXY` 为新端口并返回
+  `envRewritten: true`；重写失败返回 `envRewriteError`。端口变更需要完整重启 DSH 才监听新端口。
+- 端口避让状态下写 `.env`（`env-apply`）会把实际避让端口同步为配置端口，返回
+  `adoptedPort` / `adoptedFrom`，避免下次重启时 `.env` 与监听端口错位。
 - `revision` 取自 `snapshot.config.revision`；不匹配时返回 `settings-conflict`，
   其余写入失败返回 `settings-rejected`，入参校验失败返回 `bad-request`。
 
@@ -164,12 +172,13 @@ DSH 进程在启动时把 `$DSH_HOME/.env` 中的代理变量注入进程环境�
 
 ```jsonc
 {
-  "router": { "running": true, "port": 17890, "configPort": 17890, "error": null,
-              "startedAt": 1700000000000, "restartRequired": false },
+  "router": { "running": true, "port": 17890, "configPort": 17890, "portFallback": null,
+              "error": null, "startedAt": 1700000000000, "restartRequired": false },
   "env": { "envFile": "$DSH_HOME/.env", "routerUrlMasked": "http://dshps:***@127.0.0.1:17890",
            "fileHttpProxy": "...", "processHttpProxy": "...", "noProxy": null,
            "applied": true, "effective": false, "pendingRestart": true,
-           "warning": "…", "warnings": ["…"] },
+           "warning": "…", "warnings": ["…"],
+           "warningCodes": [{ "code": "restart-required" }] },
   "config": { "port": 17890, "defaultProxy": "direct",
               "proxies": [{ "id": "office", "label": "Office", "url": "http://127.0.0.1:7890",
                             "username": "", "hasPassword": true, "enabled": true,

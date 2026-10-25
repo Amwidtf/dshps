@@ -138,12 +138,16 @@ process environment, which is how in-process requests can be sent to the router.
   lines for keys that did not exist) and removes the backup file; without a
   backup it only removes managed lines whose value is exactly the current router
   URL.
-- Known interferences, reported in `env.warnings`:
+- Known interferences. `env.warnings` is an English fallback; `env.warningCodes`
+  is a stable `{ code, params }` list localized by the client:
   - `ALL_PROXY` can take precedence over `HTTP_PROXY`/`HTTPS_PROXY` and make
     process traffic bypass the router;
   - `NO_PROXY` entries that match a mapped provider host bypass the router for
     that provider;
   - a legacy lowercase `http_proxy` is not managed by the plugin;
+  - port fallback (`port-fallback`) or a `.env` port that differs from the actual
+    port (`port-mismatch`);
+  - `.env` written but DSH not fully restarted (`restart-required`);
   - after changing `port`, saving rewrites a managed `.env` automatically and
     asks for a full DSH restart; the gateway keeps the old port until then.
 
@@ -181,10 +185,10 @@ results. Failure responses always carry all of `code` / `message` / `details`.
 | Endpoint | Payload | Result |
 | --- | --- | --- |
 | `snapshot` | `{}` | `{ snapshot }` |
-| `config-write` | `{ config, revision? }` | `{ snapshot, warnings }` |
+| `config-write` | `{ config, revision? }` | `{ snapshot, warnings, portChanged, envRewritten?, envRewriteError? }` |
 | `proxy-test` | `{ id }` | `{ health }` |
 | `egress-test` | `{}` | `{ effective, evidence, error? }` |
-| `env-apply` | `{}` | `{ env }` |
+| `env-apply` | `{}` | `{ env, adoptedPort?, adoptedFrom? }` |
 | `env-revert` | `{}` | `{ env }` |
 | `logs-clear` | `{}` | `{ cleared }` |
 | `diag` | `{}` | `{ diag }` |
@@ -199,6 +203,14 @@ results. Failure responses always carry all of `code` / `message` / `details`.
   id present in the submitted `proxies`.
 - Any of `defaultProxy` / `proxies` / `providers` may be omitted to keep its
   current value; a supplied section is treated as a full replacement.
+- `config.port` (1024–65535) is optional: omit it to keep the port. A provided
+  change returns `portChanged: true`; when `.env` currently manages the old URL,
+  `HTTP_PROXY`/`HTTPS_PROXY` are rewritten atomically and `envRewritten: true` is
+  returned. A write failure returns `envRewriteError`. The new port only starts
+  listening after a full DSH restart.
+- When `.env` is applied while a fallback port is active, the actual port is
+  adopted as the configured port and `adoptedPort` / `adoptedFrom` are returned,
+  so a later restart cannot point `.env` at a different port.
 - `revision` comes from `snapshot.config.revision`; a mismatch returns
   `settings-conflict`. Other write failures return `settings-rejected`; input
   validation failures return `bad-request`.
@@ -207,12 +219,13 @@ Main snapshot fields:
 
 ```jsonc
 {
-  "router": { "running": true, "port": 17890, "configPort": 17890, "error": null,
-              "startedAt": 1700000000000, "restartRequired": false },
+  "router": { "running": true, "port": 17890, "configPort": 17890, "portFallback": null,
+              "error": null, "startedAt": 1700000000000, "restartRequired": false },
   "env": { "envFile": "$DSH_HOME/.env", "routerUrlMasked": "http://dshps:***@127.0.0.1:17890",
            "fileHttpProxy": "...", "processHttpProxy": "...", "noProxy": null,
            "applied": true, "effective": false, "pendingRestart": true,
-           "warning": "…", "warnings": ["…"] },
+           "warning": "…", "warnings": ["…"],
+           "warningCodes": [{ "code": "restart-required" }] },
   "config": { "port": 17890, "defaultProxy": "direct",
               "proxies": [{ "id": "office", "label": "Office", "url": "http://127.0.0.1:7890",
                             "username": "", "hasPassword": true, "enabled": true,

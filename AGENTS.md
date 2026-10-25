@@ -109,7 +109,9 @@ Architecture:
     restores that); the browser reads/writes the state through `/dshp-shell`.
     Keep positions clamped inside the viewport (a collapsed window keeps its
     title bar visible), remember the ball by its center ratio, and never let a
-    client-supplied value bypass validation.
+    client-supplied value bypass validation. The ball's hover controls (lock and
+    hide) are UI actions backed by the same state: hiding keeps open windows and
+    is re-enabled from Settings; it does not clear geometry.
 12. **Workflow execution is trusted-code execution, not a sandbox.**
     `dshp-workflow` scripts run in-process; the VM removes Node/web globals but
     is not a security boundary. Keep `allowAdHocScripts`, `allowExecute` and
